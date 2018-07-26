@@ -169,9 +169,13 @@ func ParseSnippetContent(content []byte, initialTags []Tag) []SnippetContent {
 				}
 			}
 
+			text := string(content[start.End:end.Start])
+			text = strings.TrimLeft(text, "\n\r")
+			text = strings.TrimRight(text, "\n\r\t")
+
 			snippets = append(snippets, SnippetContent{
 				Name:    start.Value,
-				Content: strings.Trim(string(content[start.End:end.Start]), "\n\r"),
+				Content: text,
 			})
 		}
 	}
