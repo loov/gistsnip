@@ -89,5 +89,5 @@ func (gist *Gist) ChangedSnippets(old *Gist) []*Snippet {
 }
 
 func (snippet *Snippet) EqualContent(old *Snippet) bool {
-	return snippet.Content != old.Content
+	return snippet.Content == old.Content
 }

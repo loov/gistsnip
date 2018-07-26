@@ -59,8 +59,15 @@ func main() {
 		log.Fatal(err)
 	}
 
-	snippets := []*Snippet{}
+	for gistName, snippet := range newGist.Snippets {
+		oldSnippet, exists := oldGist.Snippets[gistName]
+		if exists {
+			snippet.GistID = oldSnippet.GistID
+			snippet.GistURL = oldSnippet.GistURL
+		}
+	}
 
+	snippets := []*Snippet{}
 	for gistName, snippet := range newGist.Snippets {
 		snippets = append(snippets, snippet)
 
