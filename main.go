@@ -6,8 +6,8 @@ import (
 	"log"
 	"os"
 
+	"github.com/google/go-github/github"
 	"github.com/kr/pretty"
-	"github.com/shurcooL/githubv4"
 	"golang.org/x/oauth2"
 )
 
@@ -47,20 +47,36 @@ func main() {
 	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: *githubToken})
 	httpClient := oauth2.NewClient(context.Background(), tokenSource)
 
-	client := githubv4.NewClient(httpClient)
+	client := github.NewClient(httpClient)
 
-	var query struct {
-		Viewer struct {
-			Login     githubv4.String
-			CreatedAt githubv4.DateTime
-		}
-	}
-
-	err = client.Query(context.Background(), &query, nil)
+	currentUser, _, err := client.Users.Get("")
 	if err != nil {
 		log.Fatal(err)
 	}
-	pretty.Println(query)
+
+	pretty.Println(currentUser)
+
+	gist := &github.Gist{}
+	gist.Owner = currentUser
+	gist.Description = github.String("current-directory")
+	gist.Public = github.Bool(false)
+	gist.Files = map[github.GistFilename]github.GistFile{}
+
+	for _, file := range newGist.Files {
+		for _, snippet := range file.Snippets {
+			// todo better
+			name := file.Path + "." + snippet.Name + ".go"
+			gist.Files[github.GistFilename(name)] = github.GistFile{
+				Content: github.String(snippet.Content),
+			}
+		}
+	}
+
+	result, _, err := client.Gists.Create(gist)
+	if err != nil {
+		log.Fatal(err)
+	}
+	pretty.Println(result)
 }
 
 //gistsnip:end:main

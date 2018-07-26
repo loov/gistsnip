@@ -8,8 +8,9 @@ import (
 
 type Gist struct {
 	GistID string
-	Desc   string
-	Files  map[string]*File
+
+	Desc  string
+	Files map[string]*File
 }
 
 type File struct {
@@ -18,8 +19,9 @@ type File struct {
 }
 
 type Snippet struct {
+	GistID string
+
 	Name    string
-	GistID  string
 	Content string
 }
 
