@@ -19,11 +19,8 @@ var (
 	githubToken = flag.String("github", os.Getenv("GISTSNIP_TOKEN"), "github authentication token")
 )
 
-//gistsnip:start:main
 func main() {
-	//gistsnip:start:parse
 	flag.Parse()
-	//gistsnip:end:parse
 
 	paths := flag.Args()
 	if len(paths) == 0 {
@@ -127,5 +124,3 @@ func main() {
 		fmt.Println(snippet.Path, snippet.GistURL)
 	}
 }
-
-//gistsnip:end:main

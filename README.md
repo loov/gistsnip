@@ -2,7 +2,7 @@
 
 Create multiple gists from code based on annotations.
 
-For example assuming you have a file main.go:
+As an example you may have `main.go`:
 
 ```go
 func main() {
@@ -31,6 +31,8 @@ and
 ```go
 fmt.Println("hello world")
 ```
+
+For multiple see https://github.com/egonelbre/db-demo/
 
 ## Usage
 
