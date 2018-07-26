@@ -3,11 +3,12 @@ package main
 import (
 	"context"
 	"flag"
+	"fmt"
 	"log"
 	"os"
+	"sort"
 
 	"github.com/google/go-github/github"
-	"github.com/kr/pretty"
 	"golang.org/x/oauth2"
 )
 
@@ -48,18 +49,6 @@ func main() {
 		newGist.Description = oldGist.Description
 	}
 
-	pretty.Println(oldGist)
-	pretty.Println(newGist)
-
-	pretty.Println(newGist.ChangedSnippets(oldGist))
-
-	err = SaveGist(*gistsnip, newGist)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	return
-
 	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: *githubToken})
 	httpClient := oauth2.NewClient(context.Background(), tokenSource)
 
@@ -70,26 +59,66 @@ func main() {
 		log.Fatal(err)
 	}
 
-	pretty.Println(currentUser)
+	snippets := []*Snippet{}
 
-	gist := &github.Gist{}
-	gist.Owner = currentUser
-	gist.Description = github.String(newGist.Description)
-	gist.Public = github.Bool(false)
-	gist.Files = map[github.GistFilename]github.GistFile{}
+	for gistName, snippet := range newGist.Snippets {
+		snippets = append(snippets, snippet)
 
-	for _, snippet := range newGist.Snippets {
-		// todo better
+		oldSnippet, exists := oldGist.Snippets[gistName]
+		if exists && oldSnippet.EqualContent(snippet) && oldSnippet.GistID != "" {
+			continue
+		}
+
+		description := newGist.Description
+
+		if link, err := GithubLinkToFile(snippet.File, snippet.Line); err == nil {
+			if description != "" {
+				description += "\n"
+			}
+			description += link
+		}
+
+		gist := &github.Gist{}
+		gist.Owner = currentUser
+		gist.Description = github.String(description)
+		gist.Public = github.Bool(false)
+		gist.Files = map[github.GistFilename]github.GistFile{}
+
 		gist.Files[github.GistFilename(snippet.Path)] = github.GistFile{
 			Content: github.String(snippet.Content),
 		}
+
+		if oldSnippet, ok := oldGist.Snippets[gistName]; ok {
+			if oldSnippet.GistID != "" {
+				_, _, err := client.Gists.Edit(oldSnippet.GistID, gist)
+				if err != nil {
+					log.Fatal(err)
+				}
+				continue
+			}
+		}
+
+		result, _, err := client.Gists.Create(gist)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		snippet.GistID = *result.ID
+		snippet.GistURL = *result.HTMLURL
 	}
 
-	result, _, err := client.Gists.Create(gist)
+	err = SaveGist(*gistsnip, newGist)
 	if err != nil {
 		log.Fatal(err)
 	}
-	pretty.Println(result)
+
+	sort.Slice(snippets, func(i, k int) bool {
+		return snippets[i].Path < snippets[k].Path
+	})
+
+	for _, snippet := range snippets {
+		fmt.Println(snippet.Path, snippet.GistURL)
+	}
 }
 
 //gistsnip:end:main

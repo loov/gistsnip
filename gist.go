@@ -8,20 +8,16 @@ import (
 )
 
 type Gist struct {
-	GistID   string `json:"omitempty"`
-	GistURL  string `json:"omitempty"`
-	Username string `json:"omitempty"`
-
 	Description string
 	Snippets    map[string]*Snippet
-
-	Separate bool `json:"omitempty"` // each snippet as a separate gist
 }
 
 type Snippet struct {
-	GistID  string `json:"omitempty"`
-	GistURL string `json:"omitempty"`
+	GistID  string `json:",omitempty"`
+	GistURL string `json:",omitempty"`
 
+	Line    int
+	File    string
 	Path    string
 	Name    string
 	Content string
@@ -84,10 +80,14 @@ func (gist *Gist) ChangedSnippets(old *Gist) []*Snippet {
 			continue
 		}
 
-		if newSnippet.Content != oldSnippet.Content {
+		if !newSnippet.EqualContent(oldSnippet) {
 			changed = append(changed, newSnippet)
 			continue
 		}
 	}
 	return changed
+}
+
+func (snippet *Snippet) EqualContent(old *Snippet) bool {
+	return snippet.Content != old.Content
 }

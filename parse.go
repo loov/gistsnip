@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -106,6 +107,8 @@ func (gist *Gist) IncludeFile(filename string) error {
 
 		gist.Snippets[snipPath] = &Snippet{
 			Name:    content.Name,
+			Line:    content.Line,
+			File:    filepath.ToSlash(filename),
 			Path:    snipPath,
 			Content: content.Content,
 		}
@@ -139,6 +142,7 @@ func ParseTags(content []byte) []Tag {
 
 type SnippetContent struct {
 	Name    string
+	Line    int
 	Content string
 }
 
@@ -167,6 +171,7 @@ func ParseSnippetContent(content []byte, initialTags []Tag) []SnippetContent {
 
 			snippets = append(snippets, SnippetContent{
 				Name:    start.Value,
+				Line:    bytes.Count(content[:start.End], []byte{'\n'}) + 1,
 				Content: text,
 			})
 		}
