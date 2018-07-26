@@ -9,7 +9,8 @@ import (
 )
 
 var (
-	configName = flag.String("config", ".gistsnip", "default configuration file")
+	configName  = flag.String("config", ".gistsnip", "default configuration file")
+	githubToken = flag.String("github", os.Getenv("GISTSNIP_TOKEN"), "github authentication token")
 )
 
 //gistsnip:start:main
