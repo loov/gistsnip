@@ -157,7 +157,7 @@ func ParseSnippetContent(content []byte, initialTags []Tag) []SnippetContent {
 			start := tags[head]
 			end := Tag{Start: len(content), End: len(content), Action: "end", Value: start.Value}
 
-			for tail := len(tags) - 1; head < tail; tail-- {
+			for tail := head + 1; head < tail; tail++ {
 				if tags[tail].Action == "end" && strings.EqualFold(tags[tail].Value, start.Value) {
 					end = tags[tail]
 					tags = append(tags[:tail], tags[tail+1:]...)
