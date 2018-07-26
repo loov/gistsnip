@@ -1,11 +1,14 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"log"
 	"os"
 
 	"github.com/kr/pretty"
+	"github.com/shurcooL/githubv4"
+	"golang.org/x/oauth2"
 )
 
 var (
@@ -40,6 +43,24 @@ func main() {
 
 	pretty.Println(oldGist)
 	pretty.Println(newGist)
+
+	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: *githubToken})
+	httpClient := oauth2.NewClient(context.Background(), tokenSource)
+
+	client := githubv4.NewClient(httpClient)
+
+	var query struct {
+		Viewer struct {
+			Login     githubv4.String
+			CreatedAt githubv4.DateTime
+		}
+	}
+
+	err = client.Query(context.Background(), &query, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+	pretty.Println(query)
 }
 
 //gistsnip:end:main
