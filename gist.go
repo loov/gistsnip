@@ -7,10 +7,11 @@ import (
 )
 
 type Gist struct {
-	GistID string
+	GistID  string `json:"omitempty"`
+	GistURL string `json:"omitempty"`
 
-	Desc  string
-	Files map[string]*File
+	Description string
+	Files       map[string]*File
 }
 
 type File struct {
@@ -19,21 +20,22 @@ type File struct {
 }
 
 type Snippet struct {
-	GistID string
+	GistID  string `json:"omitempty"`
+	GistURL string `json:"omitempty"`
 
 	Name    string
 	Content string
 }
 
 func NewGist() *Gist {
-	return &Gist{Desc: "", Files: make(map[string]*File)}
+	return &Gist{Files: make(map[string]*File)}
 }
 
 func NewFile(path string) *File {
 	return &File{Path: path, Snippets: make(map[string]*Snippet)}
 }
 
-func LoadConfig(name string) (*Gist, error) {
+func LoadGist(name string) (*Gist, error) {
 	f, err := os.Open(name)
 	if err != nil {
 		return nil, err
@@ -43,4 +45,26 @@ func LoadConfig(name string) (*Gist, error) {
 	gist := NewGist()
 	err = json.NewDecoder(bufio.NewReader(f)).Decode(f)
 	return gist, err
+}
+
+func SaveGist(name string, gist *Gist) error {
+	f, err := os.Create(name)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	wr := bufio.NewWriter(f)
+	defer wr.Flush()
+
+	enc := json.NewEncoder(wr)
+	enc.SetIndent("", "    ")
+
+	err = enc.Encode(gist)
+	return err
+}
+
+func (gist *Gist) EqualContent(next *Gist) bool {
+	// TODO
+	return false
 }

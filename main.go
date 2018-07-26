@@ -12,7 +12,9 @@ import (
 )
 
 var (
-	configName  = flag.String("config", ".gistsnip", "default configuration file")
+	description = flag.String("description", "", "gist description")
+
+	gistInfo    = flag.String("gistsnip", ".gistsnip", "gistsnip info file")
 	githubToken = flag.String("github", os.Getenv("GISTSNIP_TOKEN"), "github authentication token")
 )
 
@@ -27,7 +29,7 @@ func main() {
 		paths = []string{"."}
 	}
 
-	oldGist, err := LoadConfig(*configName)
+	oldGist, err := LoadGist(*gistInfo)
 	if os.IsNotExist(err) {
 		oldGist = NewGist()
 		err = nil
@@ -41,8 +43,20 @@ func main() {
 		log.Fatal(err)
 	}
 
+	newGist.Description = *description
+	if newGist.Description == "" {
+		newGist.Description = oldGist.Description
+	}
+
 	pretty.Println(oldGist)
 	pretty.Println(newGist)
+
+	err = SaveGist(*gistInfo, newGist)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return
 
 	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: *githubToken})
 	httpClient := oauth2.NewClient(context.Background(), tokenSource)
@@ -58,7 +72,7 @@ func main() {
 
 	gist := &github.Gist{}
 	gist.Owner = currentUser
-	gist.Description = github.String("current-directory")
+	gist.Description = github.String(newGist.Description)
 	gist.Public = github.Bool(false)
 	gist.Files = map[github.GistFilename]github.GistFile{}
 
