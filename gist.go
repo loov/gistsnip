@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"encoding/json"
 	"os"
+	"path/filepath"
 )
 
 type Gist struct {
@@ -11,28 +12,27 @@ type Gist struct {
 	GistURL string `json:"omitempty"`
 
 	Description string
-	Files       map[string]*File
-}
-
-type File struct {
-	Path     string
-	Snippets map[string]*Snippet
+	Snippets    map[string]*Snippet
 }
 
 type Snippet struct {
 	GistID  string `json:"omitempty"`
 	GistURL string `json:"omitempty"`
 
+	Path    string
 	Name    string
 	Content string
 }
 
-func NewGist() *Gist {
-	return &Gist{Files: make(map[string]*File)}
+func SnippetPath(file, snippetName string) string {
+	cfile := filepath.ToSlash(file)
+	ext := filepath.Ext(cfile)
+	root := file[:len(cfile)-len(ext)]
+	return root + "#" + snippetName + ext
 }
 
-func NewFile(path string) *File {
-	return &File{Path: path, Snippets: make(map[string]*Snippet)}
+func NewGist() *Gist {
+	return &Gist{Snippets: make(map[string]*Snippet)}
 }
 
 func LoadGist(name string) (*Gist, error) {
@@ -43,7 +43,7 @@ func LoadGist(name string) (*Gist, error) {
 	defer f.Close()
 
 	gist := NewGist()
-	err = json.NewDecoder(bufio.NewReader(f)).Decode(f)
+	err = json.NewDecoder(bufio.NewReader(f)).Decode(gist)
 	return gist, err
 }
 
@@ -64,7 +64,27 @@ func SaveGist(name string, gist *Gist) error {
 	return err
 }
 
-func (gist *Gist) EqualContent(next *Gist) bool {
-	// TODO
-	return false
+func (gist *Gist) EqualContent(old *Gist) bool {
+	if len(gist.Snippets) != len(old.Snippets) {
+		return false
+	}
+
+	return len(gist.ChangedSnippets(old)) == 0
+}
+
+func (gist *Gist) ChangedSnippets(old *Gist) []*Snippet {
+	changed := []*Snippet{}
+	for newSnipName, newSnippet := range gist.Snippets {
+		oldSnippet, found := old.Snippets[newSnipName]
+		if !found {
+			changed = append(changed, newSnippet)
+			continue
+		}
+
+		if newSnippet.Content != oldSnippet.Content {
+			changed = append(changed, newSnippet)
+			continue
+		}
+	}
+	return changed
 }

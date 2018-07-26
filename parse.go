@@ -76,17 +76,6 @@ func (gist *Gist) IncludeDir(dir string) error {
 }
 
 func (gist *Gist) IncludeFile(filename string) error {
-	path := filepath.ToSlash(filename)
-	file, exists := gist.Files[path]
-	if !exists {
-		file = NewFile(path)
-		defer func() {
-			if len(file.Snippets) > 0 {
-				gist.Files[path] = file
-			}
-		}()
-	}
-
 	stat, _ := os.Stat(filename)
 	if stat.Size() > 1<<20 {
 		// larger than megabyte, probably not a source file
@@ -107,14 +96,17 @@ func (gist *Gist) IncludeFile(filename string) error {
 	contents := ParseSnippetContent(content, tags)
 
 	for _, content := range contents {
-		snip, multiple := file.Snippets[content.Name]
+		snipPath := SnippetPath(filename, content.Name)
+
+		snip, multiple := gist.Snippets[snipPath]
 		if multiple {
 			snip.Content += "\n\n" + content.Content
 			continue
 		}
 
-		file.Snippets[content.Name] = &Snippet{
+		gist.Snippets[snipPath] = &Snippet{
 			Name:    content.Name,
+			Path:    snipPath,
 			Content: content.Content,
 		}
 	}

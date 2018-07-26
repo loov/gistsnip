@@ -1,18 +1,15 @@
 {
     "Description": "",
-    "Files": {
-        "main.go": {
-            "Path": "main.go",
-            "Snippets": {
-                "main": {
-                    "Name": "main",
-                    "Content": "func main() {\n\t//gistsnip:start:parse\n\tflag.Parse()\n\t//gistsnip:end:parse\n\n\tpaths := flag.Args()\n\tif len(paths) == 0 {\n\t\tpaths = []string{\".\"}\n\t}\n\n\toldGist, err := LoadGist(*gistInfo)\n\tif os.IsNotExist(err) {\n\t\toldGist = NewGist()\n\t\terr = nil\n\t}\n\tif err != nil {\n\t\tlog.Fatal(err)\n\t}\n\n\tnewGist, err := GistFromGlobs(paths)\n\tif err != nil {\n\t\tlog.Fatal(err)\n\t}\n\n\tnewGist.Description = *description\n\tif newGist.Description == \"\" {\n\t\tnewGist.Description = oldGist.Description\n\t}\n\n\tpretty.Println(oldGist)\n\tpretty.Println(newGist)\n\n\terr = SaveGist(*gistInfo, newGist)\n\tif err != nil {\n\t\tlog.Fatal(err)\n\t}\n\n\treturn\n\n\ttokenSource := oauth2.StaticTokenSource(\u0026oauth2.Token{AccessToken: *githubToken})\n\thttpClient := oauth2.NewClient(context.Background(), tokenSource)\n\n\tclient := github.NewClient(httpClient)\n\n\tcurrentUser, _, err := client.Users.Get(\"\")\n\tif err != nil {\n\t\tlog.Fatal(err)\n\t}\n\n\tpretty.Println(currentUser)\n\n\tgist := \u0026github.Gist{}\n\tgist.Owner = currentUser\n\tgist.Description = github.String(newGist.Description)\n\tgist.Public = github.Bool(false)\n\tgist.Files = map[github.GistFilename]github.GistFile{}\n\n\tfor _, file := range newGist.Files {\n\t\tfor _, snippet := range file.Snippets {\n\t\t\t// todo better\n\t\t\tname := file.Path + \".\" + snippet.Name + \".go\"\n\t\t\tgist.Files[github.GistFilename(name)] = github.GistFile{\n\t\t\t\tContent: github.String(snippet.Content),\n\t\t\t}\n\t\t}\n\t}\n\n\tresult, _, err := client.Gists.Create(gist)\n\tif err != nil {\n\t\tlog.Fatal(err)\n\t}\n\tpretty.Println(result)\n}"
-                },
-                "parse": {
-                    "Name": "parse",
-                    "Content": "\tflag.Parse()"
-                }
-            }
+    "Snippets": {
+        "main#main.go": {
+            "Path": "main#main.go",
+            "Name": "main",
+            "Content": "func main() {\n\t//gistsnip:start:parse\n\tflag.Parse()\n\t//gistsnip:end:parse\n\n\tpaths := flag.Args()\n\tif len(paths) == 0 {\n\t\tpaths = []string{\".\"}\n\t}\n\n\toldGist, err := LoadGist(*gistsnip)\n\tif os.IsNotExist(err) {\n\t\toldGist = NewGist()\n\t\terr = nil\n\t}\n\tif err != nil {\n\t\tlog.Fatal(err)\n\t}\n\n\tnewGist, err := GistFromGlobs(paths)\n\tif err != nil {\n\t\tlog.Fatal(err)\n\t}\n\n\tnewGist.Description = *description\n\tif newGist.Description == \"\" {\n\t\tnewGist.Description = oldGist.Description\n\t}\n\n\tpretty.Println(oldGist)\n\tpretty.Println(newGist)\n\n\tpretty.Println(newGist.ChangedSnippets(oldGist))\n\n\terr = SaveGist(*gistsnip, newGist)\n\tif err != nil {\n\t\tlog.Fatal(err)\n\t}\n\n\treturn\n\n\ttokenSource := oauth2.StaticTokenSource(\u0026oauth2.Token{AccessToken: *githubToken})\n\thttpClient := oauth2.NewClient(context.Background(), tokenSource)\n\n\tclient := github.NewClient(httpClient)\n\n\tcurrentUser, _, err := client.Users.Get(\"\")\n\tif err != nil {\n\t\tlog.Fatal(err)\n\t}\n\n\tpretty.Println(currentUser)\n\n\tgist := \u0026github.Gist{}\n\tgist.Owner = currentUser\n\tgist.Description = github.String(newGist.Description)\n\tgist.Public = github.Bool(false)\n\tgist.Files = map[github.GistFilename]github.GistFile{}\n\n\tfor _, snippet := range newGist.Snippets {\n\t\t// todo better\n\t\tgist.Files[github.GistFilename(snippet.Path)] = github.GistFile{\n\t\t\tContent: github.String(snippet.Content),\n\t\t}\n\t}\n\n\tresult, _, err := client.Gists.Create(gist)\n\tif err != nil {\n\t\tlog.Fatal(err)\n\t}\n\tpretty.Println(result)\n}"
+        },
+        "main#parse.go": {
+            "Path": "main#parse.go",
+            "Name": "parse",
+            "Content": "\tflag.Parse()"
         }
     }
 }

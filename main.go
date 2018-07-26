@@ -14,7 +14,7 @@ import (
 var (
 	description = flag.String("description", "", "gist description")
 
-	gistInfo    = flag.String("gistsnip", ".gistsnip", "gistsnip info file")
+	gistsnip    = flag.String("gistsnip", ".gistsnip", "gistsnip info file")
 	githubToken = flag.String("github", os.Getenv("GISTSNIP_TOKEN"), "github authentication token")
 )
 
@@ -29,7 +29,7 @@ func main() {
 		paths = []string{"."}
 	}
 
-	oldGist, err := LoadGist(*gistInfo)
+	oldGist, err := LoadGist(*gistsnip)
 	if os.IsNotExist(err) {
 		oldGist = NewGist()
 		err = nil
@@ -51,7 +51,9 @@ func main() {
 	pretty.Println(oldGist)
 	pretty.Println(newGist)
 
-	err = SaveGist(*gistInfo, newGist)
+	pretty.Println(newGist.ChangedSnippets(oldGist))
+
+	err = SaveGist(*gistsnip, newGist)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -76,13 +78,10 @@ func main() {
 	gist.Public = github.Bool(false)
 	gist.Files = map[github.GistFilename]github.GistFile{}
 
-	for _, file := range newGist.Files {
-		for _, snippet := range file.Snippets {
-			// todo better
-			name := file.Path + "." + snippet.Name + ".go"
-			gist.Files[github.GistFilename(name)] = github.GistFile{
-				Content: github.String(snippet.Content),
-			}
+	for _, snippet := range newGist.Snippets {
+		// todo better
+		gist.Files[github.GistFilename(snippet.Path)] = github.GistFile{
+			Content: github.String(snippet.Content),
 		}
 	}
 
