@@ -8,11 +8,14 @@ import (
 )
 
 type Gist struct {
-	GistID  string `json:"omitempty"`
-	GistURL string `json:"omitempty"`
+	GistID   string `json:"omitempty"`
+	GistURL  string `json:"omitempty"`
+	Username string `json:"omitempty"`
 
 	Description string
 	Snippets    map[string]*Snippet
+
+	Separate bool `json:"omitempty"` // each snippet as a separate gist
 }
 
 type Snippet struct {
