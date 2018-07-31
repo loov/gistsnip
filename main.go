@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"sort"
+	"strings"
 
 	"github.com/google/go-github/github"
 	"golang.org/x/oauth2"
@@ -51,7 +52,7 @@ func main() {
 
 	client := github.NewClient(httpClient)
 
-	currentUser, _, err := client.Users.Get("")
+	currentUser, _, err := client.Users.Get(context.TODO(), "")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -70,7 +71,14 @@ func main() {
 
 		oldSnippet, exists := oldGist.Snippets[gistName]
 		if exists && oldSnippet.EqualContent(snippet) && oldSnippet.GistID != "" {
+			log.Println("Skipping ", gistName)
 			continue
+		}
+
+		if exists {
+			log.Println("Updating ", gistName)
+		} else {
+			log.Println("Creating ", gistName)
 		}
 
 		description := newGist.Description
@@ -88,13 +96,14 @@ func main() {
 		gist.Public = github.Bool(false)
 		gist.Files = map[github.GistFilename]github.GistFile{}
 
-		gist.Files[github.GistFilename(snippet.Path)] = github.GistFile{
+		sanitizedPath := strings.Replace(snippet.Path, "/", "\\", -1)
+		gist.Files[github.GistFilename(sanitizedPath)] = github.GistFile{
 			Content: github.String(snippet.Content),
 		}
 
 		if oldSnippet, ok := oldGist.Snippets[gistName]; ok {
 			if oldSnippet.GistID != "" {
-				_, _, err := client.Gists.Edit(oldSnippet.GistID, gist)
+				_, _, err := client.Gists.Edit(context.TODO(), oldSnippet.GistID, gist)
 				if err != nil {
 					log.Fatal(err)
 				}
@@ -102,7 +111,7 @@ func main() {
 			}
 		}
 
-		result, _, err := client.Gists.Create(gist)
+		result, _, err := client.Gists.Create(context.TODO(), gist)
 		if err != nil {
 			log.Fatal(err)
 		}

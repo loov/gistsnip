@@ -109,7 +109,7 @@ func (gist *Gist) IncludeFile(filename string) error {
 			Name:    content.Name,
 			Line:    content.Line,
 			File:    filepath.ToSlash(filename),
-			Path:    snipPath,
+			Path:    filepath.ToSlash(snipPath),
 			Content: content.Content,
 		}
 	}
@@ -157,7 +157,7 @@ func ParseSnippetContent(content []byte, initialTags []Tag) []SnippetContent {
 			start := tags[head]
 			end := Tag{Start: len(content), End: len(content), Action: "end", Value: start.Value}
 
-			for tail := head + 1; head < tail; tail++ {
+			for tail := head + 1; tail < len(tags); tail++ {
 				if tags[tail].Action == "end" && strings.EqualFold(tags[tail].Value, start.Value) {
 					end = tags[tail]
 					tags = append(tags[:tail], tags[tail+1:]...)
