@@ -9,7 +9,10 @@ import (
 	"strings"
 )
 
-var rxGithub = regexp.MustCompile(`^git@github.com:(.*)\.git$`)
+// one of:
+// https://github.com/loov/watchrun.git
+// git@github.com:loov/watchrun.git
+var rxGithub = regexp.MustCompile(`^(?:https://github.com/|git@github.com:)(.*)\.git$`)
 
 func GithubLinkToFile(path string, line int) (string, error) {
 	dir := filepath.Dir(path)

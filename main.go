@@ -83,11 +83,14 @@ func main() {
 
 		description := newGist.Description
 
-		if link, err := GithubLinkToFile(snippet.File, snippet.Line); err == nil {
+		link, err := GithubLinkToFile(snippet.File, snippet.Line)
+		if err == nil {
 			if description != "" {
 				description += "\n"
 			}
 			description += link
+		} else {
+			log.Println("Failed to create github link", err)
 		}
 
 		gist := &github.Gist{}
