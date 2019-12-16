@@ -174,27 +174,8 @@ func ParseSnippetContent(content []byte, initialTags []Tag) []SnippetContent {
 			text = strings.TrimLeft(text, "\n\r")
 			text = strings.TrimRight(text, " \n\r\t")
 
-			minIndent := 1000
-			for _, line := range strings.Split(text, "\n") {
-				if strings.TrimSpace(line) == "" {
-					continue
-				}
-				indent := 0
-				for _, r := range line {
-					if r == '\t' {
-						indent++
-					} else {
-						break
-					}
-				}
-
-				if indent < minIndent {
-					minIndent = indent
-				}
-			}
-
-			rxDedent := regexp.MustCompile(`(?m)` + strings.Repeat(`^\t`, minIndent))
-			text = rxDedent.ReplaceAllString(text, "")
+			text = Dedent(text, '\t')
+			text = Dedent(text, ' ')
 
 			snippets = append(snippets, SnippetContent{
 				Name:    start.Value,
@@ -205,4 +186,30 @@ func ParseSnippetContent(content []byte, initialTags []Tag) []SnippetContent {
 	}
 
 	return snippets
+}
+
+func Dedent(text string, delimiter rune) string {
+	minIndent := 1000
+	for _, line := range strings.Split(text, "\n") {
+		if strings.TrimSpace(line) == "" {
+			continue
+		}
+		indent := 0
+		for _, r := range line {
+			if r == delimiter {
+				indent++
+			} else {
+				break
+			}
+		}
+
+		if indent < minIndent {
+			minIndent = indent
+		}
+	}
+
+	rxDedent := regexp.MustCompile(`(?m)^` + strings.Repeat(string(delimiter), minIndent))
+	text = rxDedent.ReplaceAllString(text, "")
+
+	return text
 }
