@@ -2,8 +2,8 @@
     "Description": "",
     "Snippets": {
         "example#example.go": {
-            "GistID": "e06be0cc410eb58a61c08f10aaf0da87",
-            "GistURL": "https://gist.github.com/e06be0cc410eb58a61c08f10aaf0da87",
+            "GistID": "3397988e7cf3e26a5b18016459660be8",
+            "GistURL": "https://gist.github.com/3397988e7cf3e26a5b18016459660be8",
             "Line": 5,
             "File": "example.go",
             "Path": "example#example.go",
@@ -11,8 +11,8 @@
             "Content": "func Example() {\n\tfor i := 0; i \u003c 10; i++ {\n\t\tfmt.Println(i)\n\t}\n}"
         },
         "example#for.go": {
-            "GistID": "d8cc950faa37e5ab959011ebeaf5b367",
-            "GistURL": "https://gist.github.com/d8cc950faa37e5ab959011ebeaf5b367",
+            "GistID": "22f75f6f1bf63130595dc379bb1a7db1",
+            "GistURL": "https://gist.github.com/22f75f6f1bf63130595dc379bb1a7db1",
             "Line": 8,
             "File": "example.go",
             "Path": "example#for.go",
