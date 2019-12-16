@@ -18,6 +18,33 @@
             "Path": "example#for.go",
             "Name": "for",
             "Content": "\t\tfmt.Println(i)"
+        },
+        "example#gist1.swift": {
+            "GistID": "38e5286cc909c5b9b434e2b606cb018b",
+            "GistURL": "https://gist.github.com/38e5286cc909c5b9b434e2b606cb018b",
+            "Line": 2,
+            "File": "example.swift",
+            "Path": "example#gist1.swift",
+            "Name": "gist1",
+            "Content": "    func assemble(container: Container) {\n        container.autoregister(ChildManagering.self, initializer: ChildManager.init)\n            .inObjectScope(.container)"
+        },
+        "example#gist2.swift": {
+            "GistID": "9a255c39526da05113c8fb65c3a301b0",
+            "GistURL": "https://gist.github.com/9a255c39526da05113c8fb65c3a301b0",
+            "Line": 4,
+            "File": "example.swift",
+            "Path": "example#gist2.swift",
+            "Name": "gist2",
+            "Content": "        container.autoregister(ChildManagering.self, initializer: ChildManager.init)"
+        },
+        "example#gist3.swift": {
+            "GistID": "a282b110e3a09a94e1c749c4736031b6",
+            "GistURL": "https://gist.github.com/a282b110e3a09a94e1c749c4736031b6",
+            "Line": 5,
+            "File": "example.swift",
+            "Path": "example#gist3.swift",
+            "Name": "gist3",
+            "Content": "        container.autoregister(ChildManagering.self, initializer: ChildManager.init)\n            .inObjectScope(.container)\n        container.autoregister(UserManagering.self, initializer: UserManager.init)\n            .inObjectScope(.container)\n    }"
         }
     }
 }
