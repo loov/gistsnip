@@ -11,6 +11,7 @@ import (
 )
 
 var rxTag = regexp.MustCompile(`(?i)//gistsnip:(\w+):(\w+)`)
+var rxLine = regexp.MustCompile(`(?im)^\s*//gistsnip:(\w+):(\w+)\s*$\n`)
 
 func GistFromGlobs(globs []string) (*Gist, error) {
 	gist := NewGist()
@@ -168,6 +169,9 @@ func ParseSnippetContent(content []byte, initialTags []Tag) []SnippetContent {
 			text := string(content[start.End:end.Start])
 			text = strings.TrimLeft(text, "\n\r")
 			text = strings.TrimRight(text, "\n\r\t")
+
+			// remove any nested gistsnips
+			text = rxLine.ReplaceAllString(text, "")
 
 			minIndent := 1000
 			for _, line := range strings.Split(text, "\n") {
