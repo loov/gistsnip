@@ -8,7 +8,6 @@ import (
 )
 
 type Gist struct {
-	Description string
 	Snippets    map[string]*Snippet
 }
 
@@ -21,6 +20,8 @@ type Snippet struct {
 	Path    string
 	Name    string
 	Content string
+
+	Description string
 }
 
 func SnippetPath(file, snippetName string) string {
@@ -89,5 +90,6 @@ func (gist *Gist) ChangedSnippets(old *Gist) []*Snippet {
 }
 
 func (snippet *Snippet) EqualContent(old *Snippet) bool {
-	return snippet.Content == old.Content
+	return snippet.Content == old.Content &&
+		snippet.Description == old.Description
 }
