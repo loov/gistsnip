@@ -8,7 +8,7 @@ import (
 )
 
 type Gist struct {
-	Snippets    map[string]*Snippet
+	Snippets map[string]*Snippet
 }
 
 type Snippet struct {
@@ -32,7 +32,9 @@ func SnippetPath(file, snippetName string) string {
 }
 
 func NewGist() *Gist {
-	return &Gist{Snippets: make(map[string]*Snippet)}
+	return &Gist{
+		Snippets: make(map[string]*Snippet),
+	}
 }
 
 func LoadGist(name string) (*Gist, error) {
@@ -86,6 +88,7 @@ func (gist *Gist) ChangedSnippets(old *Gist) []*Snippet {
 			continue
 		}
 	}
+
 	return changed
 }
 

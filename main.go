@@ -75,11 +75,11 @@ func main() {
 		if err != nil {
 			log.Println("Failed to create github link", err)
 		}
-		
+
 		var description strings.Builder
 		err = descriptionTemplate.Execute(&description, map[string]interface{}{
 			"RepositoryLink": repositoryLink,
-			"SourceLink": sourceLink,
+			"SourceLink":     sourceLink,
 		})
 		snippet.Description = description.String()
 
