@@ -8,7 +8,7 @@
             "Path": "example#example.go",
             "Name": "example",
             "Content": "func Example() {\n\tfor i := 0; i \u003c 10; i++ {\n\t\tfmt.Println(i)\n\t}\n}",
-            "Description": "https://github.com/loov/gistsnip https://github.com/loov/gistsnip/blob/dda3770f88130f2388cd5be076c9285f9c66da97/testdata/example.go#L5"
+            "Description": "https://github.com/loov/gistsnip https://github.com/loov/gistsnip/blob/7e8e7f15cf2697cbfe6f17b68866f6e566e80539/testdata/example.go#L5"
         },
         "example#for.go": {
             "GistID": "22f75f6f1bf63130595dc379bb1a7db1",
@@ -18,7 +18,7 @@
             "Path": "example#for.go",
             "Name": "for",
             "Content": "fmt.Println(i)",
-            "Description": "https://github.com/loov/gistsnip https://github.com/loov/gistsnip/blob/dda3770f88130f2388cd5be076c9285f9c66da97/testdata/example.go#L8"
+            "Description": "https://github.com/loov/gistsnip https://github.com/loov/gistsnip/blob/7e8e7f15cf2697cbfe6f17b68866f6e566e80539/testdata/example.go#L8"
         },
         "example#gist1.swift": {
             "GistID": "38e5286cc909c5b9b434e2b606cb018b",
@@ -28,7 +28,7 @@
             "Path": "example#gist1.swift",
             "Name": "gist1",
             "Content": "func assemble(container: Container) {\n    container.autoregister(ChildManagering.self, initializer: ChildManager.init)\n        .inObjectScope(.container)",
-            "Description": "https://github.com/loov/gistsnip https://github.com/loov/gistsnip/blob/dda3770f88130f2388cd5be076c9285f9c66da97/testdata/example.swift#L2"
+            "Description": "https://github.com/loov/gistsnip https://github.com/loov/gistsnip/blob/7e8e7f15cf2697cbfe6f17b68866f6e566e80539/testdata/example.swift#L2"
         },
         "example#gist2.swift": {
             "GistID": "9a255c39526da05113c8fb65c3a301b0",
@@ -38,7 +38,7 @@
             "Path": "example#gist2.swift",
             "Name": "gist2",
             "Content": "container.autoregister(ChildManagering.self, initializer: ChildManager.init)",
-            "Description": "https://github.com/loov/gistsnip https://github.com/loov/gistsnip/blob/dda3770f88130f2388cd5be076c9285f9c66da97/testdata/example.swift#L4"
+            "Description": "https://github.com/loov/gistsnip https://github.com/loov/gistsnip/blob/7e8e7f15cf2697cbfe6f17b68866f6e566e80539/testdata/example.swift#L4"
         },
         "example#gist3.swift": {
             "GistID": "a282b110e3a09a94e1c749c4736031b6",
@@ -48,7 +48,7 @@
             "Path": "example#gist3.swift",
             "Name": "gist3",
             "Content": "    container.autoregister(ChildManagering.self, initializer: ChildManager.init)\n        .inObjectScope(.container)\n    container.autoregister(UserManagering.self, initializer: UserManager.init)\n        .inObjectScope(.container)\n}",
-            "Description": "https://github.com/loov/gistsnip https://github.com/loov/gistsnip/blob/dda3770f88130f2388cd5be076c9285f9c66da97/testdata/example.swift#L5"
+            "Description": "https://github.com/loov/gistsnip https://github.com/loov/gistsnip/blob/7e8e7f15cf2697cbfe6f17b68866f6e566e80539/testdata/example.swift#L5"
         }
     }
 }
